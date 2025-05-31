@@ -1,7 +1,7 @@
 import traceback
 from django.shortcuts import render
 from django.shortcuts import redirect
-from authentication.models import CustomAuth
+from authentication.models import CustomAuth, Role
 from .models import CustomField, Module, ProductCustomField
 from django.contrib.auth.decorators import login_required
 from tech_test.helper import random_digit_string
@@ -32,6 +32,9 @@ def remove_module(request):
         try:
             Module.objects.get(id=module_id).delete()
             ProductCustomField.objects.filter(module_id=module_id).delete()
+            get_role = Role.objects.filter(name__in=['public', 'user'])
+            for role in get_role:
+                CustomAuth.objects.filter(module_id=module_id, role_id=role.id).delete()
             CustomAuth.objects.filter(module_id=module_id).update(module_id=0)
         except:
            print(traceback.format_exc())
