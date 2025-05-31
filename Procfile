@@ -1,1 +1,1 @@
-web: gunicorn tch-test-tony.wsgi
+web: gunicorn tech_test.wsgi
