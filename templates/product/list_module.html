@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+  <h1>Module</h1>
+   <div class="card mb-3 border-0" style="max-width: 100%;">
+    <div class="row no-gutters">
+
+      <div class="col-md-8 d-flex flex-column justify-content-between">
+
+        <div class="card-footer bg-transparent border-top-0">
+           {% if user.role_id.name == "manajer" %}
+          <form action="{% url 'create_module' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm" {% if modules.id %}disabled{% endif %}>Install</button>
+          </form>
+
+          <form action="{% url 'upgrade' %}" method="get" class="d-inline">
+            <button type="submit" class="btn btn-success btn-sm" {% if not modules.id %}disabled{% endif %}>Upgrade</button>
+          </form>
+
+          <form action="{% url 'remove_module' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm"{% if not modules.id %}disabled{% endif %}>Uninstall</button>
+          </form>
+          {%endif%}
+
+          <form action="{% url 'product' %}" method="get" class="d-inline">
+            <button type="submit" class="btn btn-secondary btn-sm" {% if not modules.id %}disabled{% endif %}>Enter Module</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

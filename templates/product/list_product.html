@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% load custom_filters %}
+
+
+  <h1>List Product</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          {% for field in fields%}
+          <th scope="col">{{field.name}}</th>
+          {% endfor %}
+          
+          {% if user.role_id.name == "manajer" or user.role_id.name == "user" %}
+            <th>Action</th>
+          {%endif%}
+        </tr>
+      </thead>
+       <tbody>
+        {% for product_id, field_values in datas.items %}
+            <tr>
+                <!-- <td>{{ product_id }}</td> -->
+                {% for field in fields %}
+                    <td>{{ field_values|get_item:field.code|default:"-" }}</td>
+                {% endfor %}
+                  {% if user.role_id.name == "manajer" or user.role_id.name == "user" %}
+                <td>
+                    <!-- Button trigger modal -->
+                     <a href="{% url 'update_product' product_id %}"
+                        class="btn btn-secondary">
+                        Update Product
+                      </a>
+                           {% if user.role_id.name == "manajer" %}
+                          <!-- Button trigger modal -->
+                          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ product_id }}">
+                            Delete Product
+                          </button>
+
+                          <!-- Confirm Delete Modal -->
+                          <div class="modal fade" id="confirmDeleteModal{{ product_id }}" tabindex="-1" aria-labelledby="confirmDeleteLabel{{ product_id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content border-danger">
+                                <div class="modal-header bg-danger text-white">
+                                  <h5 class="modal-title" id="confirmDeleteLabel{{ product_id }}">Confirm Deletion</h5>
+                                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure to delete this data?
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                  <form method="POST" action="{% url 'remove_product' product_id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ product_id }}">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {% endif %}
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    {% if user.role_id.name == "manajer" or user.role_id.name == "user" %}
+    <a href="/create_product"
+      class="btn btn-primary">
+      Create Product
+    </a>
+    {%endif%}
+
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+  <h1>Create Product</h1>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in custom_fields%}
+      <div class="mb-3">
+        <label for="{{field.name}}-{{ field.id }}" class="form-label">{{field.name}}</label>
+        <input type="{% if field.type == 'int' %}number{% else %}text{% endif %}" class="form-control" id="{{field.name}}" name="{{field.name}}-{{ field.id }}" required>
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+{% endblock %}

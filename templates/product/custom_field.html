@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+  <h1>List Custom Field</h1>
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Code</th>
+      <th scope="col">Type</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for custom_field in custom_fields %}
+    <tr>
+      <th scope="row">{{custom_field.id}}</th>
+      <td>{{custom_field.name}}</td>
+      <td>{{custom_field.code}}</td>
+      <td>{{custom_field.type}}</td>
+      <td>
+         <form action="{% url 'remove_field' custom_field.id %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+          </form>
+
+      </td>
+    </tr>
+        {% endfor %}
+  </tbody>
+</table>
+
+<a href="/create_field"
+   class="btn btn-primary">
+   Create
+</a>
+
+
+{% endblock %}
